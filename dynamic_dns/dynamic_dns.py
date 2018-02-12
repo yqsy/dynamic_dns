@@ -16,7 +16,7 @@ PARSER.add_argument("-n", "--hostname", action="store",
 
 FORMAT = "%(asctime)s %(thread)d %(levelname)s %(filename)s:%(lineno)d:%(funcName)s %(message)s"
 
-LOG_FILE = "/var/log/dynamic-dns/dynamic-dns.log"
+LOG_FILE = "/var/log/dynamic_dns/dynamic_dns.log"
 
 LOG_DIR = os.path.dirname(LOG_FILE)
 if not os.path.exists(LOG_DIR):
@@ -39,8 +39,8 @@ def error_handler(etype, value, tb):
     exit(-1)
 
 
-ACCESS_KEY_ID = "/etc/dynamic-dns/access_key_id"
-ACCESS_KEY_SECRET = "/etc/dynamic-dns/access_key_secret"
+ACCESS_KEY_ID = "/etc/dynamic_dns/access_key_id"
+ACCESS_KEY_SECRET = "/etc/dynamic_dns/access_key_secret"
 
 
 def get_access():
