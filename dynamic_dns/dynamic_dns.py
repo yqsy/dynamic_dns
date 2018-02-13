@@ -17,6 +17,9 @@ PARSER = argparse.ArgumentParser(description="dynamic_dns")
 PARSER.add_argument("-n", "--hostname", action="store",
                     dest="hostname",  required=True)
 
+PARSER.add_argument("-t", "--time",  action="store",
+                    dest="time", default=30, help="minutes")
+
 FORMAT = "%(asctime)s %(thread)d %(levelname)s %(filename)s:%(lineno)d:%(funcName)s %(message)s"
 
 LOG_FILE = "/var/log/dynamic_dns/dynamic_dns.log"
@@ -98,19 +101,31 @@ def get_dns_records(domain):
 
 
 def update_dns(option):
-    ip = getip()
-    recordlist = get_dns_records(option.hostname)["DomainRecords"]["Record"]
+    # catch all exceptions
+    try:
+        ip = getip()
 
-    for record in recordlist:
-        if record["Value"] == ip:
-            logger.info("ip {} have no change".format(ip))
-        else:
-            set_dns_records(record, ip, oldip=record["Value"])
+        recordlist = get_dns_records(option.hostname)[
+            "DomainRecords"]["Record"]
+
+        for record in recordlist:
+            if record["Value"] == ip:
+                logger.info("ip {} have no change".format(ip))
+            else:
+                set_dns_records(record, ip, oldip=record["Value"])
+    except Exception:
+        etype, value, tb = sys.exc_info()
+        err_str = '{} {} {}'.format(etype, value, traceback.format_tb(tb))
+        logger.error(err_str)
 
 
 def main():
     option = PARSER.parse_args()
     sys.excepthook = error_handler
+
+    logging.getLogger("schedule").setLevel(logging.WARNING)
+
+    logger.info("every {} minutes call API".format(option.time))
 
     def updatefoo():
         update_dns(option)
@@ -118,7 +133,7 @@ def main():
     updatefoo()
 
     # write death
-    schedule.every(5).minutes.do(updatefoo)
+    schedule.every(option.time).minutes.do(updatefoo)
     while True:
         schedule.run_pending()
         time.sleep(1)
