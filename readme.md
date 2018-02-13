@@ -36,3 +36,12 @@ pip3 uninstall git+git://github.com/yqsy/dynamic_dns.git@master
 /etc/dynamic_dns/access_key_secret
 
 ```
+
+配置ID,key
+```bash
+mkdir -p /etc/dynamic_dns
+echo 'xxx' > /etc/dynamic_dns/access_key_id
+echo 'xxx' > /etc/dynamic_dns/access_key_secret
+
+chmod 400 /etc/dynamic_dns/access_key_id /etc/dynamic_dns/access_key_secret
+```

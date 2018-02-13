@@ -10,7 +10,7 @@ setup(
     author_email='yqsy021@126.com',
     url='https://github.com/yqsy/dynamic_dns',
     packages=['dynamic_dns'],
-    install_requires=[],
+    install_requires=['aliyun-python-sdk-domain>=3.0.1'],
     entry_points="""
     [console_scripts]
     dynamic_dns = dynamic_dns.dynamic_dns:main
