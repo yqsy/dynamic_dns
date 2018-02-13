@@ -13,19 +13,14 @@
 动态IP地址变化问题.  
 
 方法:  
-调用阿里云解析接口,配合crontab实现每隔一段时间更新域名绑定的IP.  
+调用阿里云解析接口,每隔一段时间更新域名绑定的IP.  
 
 
 <a id="markdown-2-说明" name="2-说明"></a>
 # 2. 说明
 
+配置/日志
 ```bash
-# 安装
-pip3 install git+git://github.com/yqsy/dynamic_dns.git@master
-
-# 卸载
-pip3 uninstall git+git://github.com/yqsy/dynamic_dns.git@master
-
 # 日志
 /var/log/dynamic_dns/dynamic_dns.log
 
@@ -34,14 +29,25 @@ pip3 uninstall git+git://github.com/yqsy/dynamic_dns.git@master
 
 # ACCESS_KEY_SECRET
 /etc/dynamic_dns/access_key_secret
-
 ```
 
-配置ID,key
+如何启动
 ```bash
-mkdir -p /etc/dynamic_dns
-echo 'xxx' > /etc/dynamic_dns/access_key_id
-echo 'xxx' > /etc/dynamic_dns/access_key_secret
+docker build -t="yqsy021/dynamic_dns:v1" \
+git@github.com:yqsy/dynamic_dns
 
-chmod 400 /etc/dynamic_dns/access_key_id /etc/dynamic_dns/access_key_secret
+mkdir -p ~/env/dynamic_dns && cd ~/env/dynamic_dns
+
+# 从 https://ak-console.aliyun.com/?spm=5176.200001.0.0.twALLa#/accesskey 获得
+echo 'access_key_id' > ./access_key_id
+echo 'access_key_secret' > ./access_key_secret
+chmod 400 ./access_key_id ./access_key_secret
+
+docker run -d --name dynamic_dns \
+    -v `pwd`/access_key_id:/etc/dynamic_dns/access_key_id:ro \
+    -v `pwd`/access_key_secret:/etc/dynamic_dns/access_key_secret:ro \
+    -v `pwd`/:/var/log/dynamic_dns:rw \
+    yqsy021/dynamic_dns:v1 \
+    dynamic_dns -n yqsycloud.top
 ```
+
