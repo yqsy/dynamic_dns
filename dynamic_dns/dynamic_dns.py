@@ -5,6 +5,9 @@ import json
 import logging
 import argparse
 import traceback
+import time
+
+import schedule
 
 from aliyunsdkcore import client
 from aliyunsdkcore.request import RpcRequest
@@ -94,11 +97,7 @@ def get_dns_records(domain):
     return response_json
 
 
-def main():
-    option = PARSER.parse_args()
-
-    sys.excepthook = error_handler
-
+def update_dns(option):
     ip = getip()
     recordlist = get_dns_records(option.hostname)["DomainRecords"]["Record"]
 
@@ -107,6 +106,22 @@ def main():
             logger.info("ip {} have no change".format(ip))
         else:
             set_dns_records(record, ip, oldip=record["Value"])
+
+
+def main():
+    option = PARSER.parse_args()
+    sys.excepthook = error_handler
+
+    def updatefoo():
+        update_dns(option)
+
+    updatefoo()
+
+    # write death
+    schedule.every(5).minutes.do(updatefoo)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == "__main__":
