@@ -33,8 +33,9 @@
 
 如何启动
 ```bash
-docker build -t="yqsy021/dynamic_dns:v1" \
-git@github.com:yqsy/dynamic_dns
+git clone https://github.com/yqsy/dynamic_dns.git
+cd dynamic_dns
+docker build -t="yqsy021/dynamic_dns:latest" .
 
 mkdir -p ~/env/dynamic_dns && cd ~/env/dynamic_dns
 
@@ -47,7 +48,6 @@ docker run -d --name dynamic_dns \
     -v `pwd`/access_key_id:/etc/dynamic_dns/access_key_id:ro \
     -v `pwd`/access_key_secret:/etc/dynamic_dns/access_key_secret:ro \
     -v `pwd`/:/var/log/dynamic_dns:rw \
-    yqsy021/dynamic_dns:v1 \
+    yqsy021/dynamic_dns \
     dynamic_dns -n yqsycloud.top
 ```
-
