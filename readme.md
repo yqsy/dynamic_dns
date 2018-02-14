@@ -35,7 +35,8 @@
 ```bash
 git clone https://github.com/yqsy/dynamic_dns.git
 cd dynamic_dns
-docker build -t="yqsy021/dynamic_dns:latest" .
+docker build --build-arg https_proxy=http://host1:1080 \
+    -t="yqsy021/dynamic_dns:latest" .
 
 mkdir -p ~/env/dynamic_dns && cd ~/env/dynamic_dns
 
