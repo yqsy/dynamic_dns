@@ -1,6 +1,9 @@
 FROM python:3.6.4-stretch
 
+
 RUN set -ex; \
+    mkdir -p ~/.pip; \
+    echo "[global]\nindex-url = https://pypi.tuna.tsinghua.edu.cn/simple" > ~/.pip/pip.conf; \
     \
     pip3 install git+git://github.com/yqsy/dynamic_dns.git@master; \
     \
