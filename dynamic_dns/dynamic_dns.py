@@ -29,7 +29,7 @@ if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     handlers=[logging.FileHandler(LOG_FILE,  mode="a")],
     format=FORMAT
 )
